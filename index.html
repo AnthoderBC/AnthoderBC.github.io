@@ -105,23 +105,30 @@ nav{
 .nav-cta-desk{display:inline-flex!important;}
 
 @media(max-width:700px){
-  nav{padding:0 12px;}
+  nav{
+    padding:0 12px;
+    position:fixed;top:0;left:0;right:0;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+    will-change:transform;
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+  }
   .nav-tagline{display:none;}
   .nav-links{display:none!important;}
   .nav-brand{gap:8px;}
-  /* Botón compacto: solo emoji + precio en una línea */
   .nav-cta-mob{
     display:inline-flex!important;
     align-items:center;gap:4px;
     font-size:11px;font-weight:800;
-    padding:7px 11px;
+    padding:8px 20px;
     border-radius:40px;
     flex-direction:row;
     white-space:nowrap;
     flex-shrink:0;
   }
-  .nav-cta-line1{font-size:11px;}  /* muestra solo "🚀 $9.99" */
-  .nav-cta-line2{display:none;}    /* oculta la segunda línea */
+  .nav-cta-line1{font-size:11px;}
+  .nav-cta-line2{display:none;}
 }
 
 @media(min-width:701px){
@@ -436,25 +443,44 @@ nav{
 /* Combo strip */
 .combo-strip{
   background:var(--green);
-  padding:32px 40px;
-  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  padding:28px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  box-sizing:border-box;width:100%;overflow:hidden;
 }
-.cs-text{}
+.cs-text{min-width:0;flex:1;}
 .cs-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:6px;}
-.cs-title{font-family:'DM Serif Display',serif;font-size:28px;color:#fff;line-height:1;}
-.cs-desc{font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;}
-.cs-right{display:flex;align-items:center;gap:24px;flex-shrink:0;}
+.cs-title{font-family:'DM Serif Display',serif;font-size:24px;color:#fff;line-height:1;}
+.cs-desc{font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;line-height:1.5;}
+.cs-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
 .cs-price-block{text-align:right;}
 .cs-was{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);text-decoration:line-through;}
-.cs-now{font-family:'DM Serif Display',serif;font-size:52px;color:#fff;line-height:1;}
+.cs-now{font-family:'DM Serif Display',serif;font-size:44px;color:#fff;line-height:1;}
 .cs-usd{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.5);}
 .cs-btn{
   display:inline-flex;align-items:center;gap:8px;
   background:#fff;color:var(--ink);font-weight:800;font-size:14px;
-  padding:14px 28px;border-radius:3px;font-family:'DM Sans',sans-serif;
-  transition:all .2s;white-space:nowrap;text-decoration:none;
+  padding:14px 24px;border-radius:3px;font-family:'DM Sans',sans-serif;
+  transition:all .2s;white-space:nowrap;text-decoration:none;flex-shrink:0;
 }
 .cs-btn:hover{background:var(--ink);color:#fff;}
+
+@media(max-width:640px){
+  .combo-strip{
+    flex-direction:column;
+    align-items:flex-start;
+    padding:22px 18px;gap:16px;
+  }
+  .cs-right{
+    width:100%;justify-content:space-between;
+    align-items:center;gap:12px;
+  }
+  .cs-price-block{text-align:left;}
+  .cs-now{font-size:36px;}
+  .cs-btn{
+    font-size:13px;padding:12px 18px;
+    width:100%;justify-content:center;
+  }
+}
 
 /* ── VOL 2 TEASER ── */
 .vol2{
@@ -738,7 +764,7 @@ footer{
     <span class="nav-logo">IA Sin <span>Complicaciones</span></span>
     <span class="nav-tagline">Tiempo Inteligente</span>
     <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta nav-cta-mob" target="_blank" rel="noopener">
-      <span class="nav-cta-line1">🚀 Guía $9.99</span>
+      <span class="nav-cta-line1">🚀 Quiero la guía por $9.99</span>
     </a>
   </div>
   <div class="nav-links">
