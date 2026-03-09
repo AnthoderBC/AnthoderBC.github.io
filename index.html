@@ -8,6 +8,18 @@
 <script>
   var s=document.createElement('script');s.src='https://static.hotmart.com/checkout/widget.min.js';document.head.appendChild(s);
   var l=document.createElement('link');l.rel='stylesheet';l.type='text/css';l.href='https://static.hotmart.com/css/hotmart-fb.min.css';document.head.appendChild(l);
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.prod-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.prod-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+function activatePrompt(el, result) {
+  document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
 </script>
 <style>
 :root{
@@ -567,25 +579,365 @@ footer{
 .footer-txt a{color:rgba(0,179,126,0.5);}
 
 /* STICKY */
+/* ── STICKY BAR ── */
 .sticky-bar{
   position:fixed;bottom:0;left:0;right:0;z-index:99;
-  background:rgba(255,255,255,0.97);
-  backdrop-filter:blur(16px);
+  background:#fff;
   border-top:2px solid var(--green);
-  padding:14px 24px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:0;
+  display:flex;align-items:stretch;
   transform:translateY(100%);transition:transform .4s ease;
-  box-shadow:0 -4px 30px rgba(0,0,0,0.1);
+  box-shadow:0 -2px 20px rgba(0,0,0,0.08);
+  font-family:'Sora',sans-serif;
 }
 .sticky-bar.visible{transform:translateY(0);}
-.sb-t{font-size:14px;font-weight:700;color:var(--navy);}
-.sb-t span{color:var(--green);}
-.sb-p{font-family:'Fraunces',serif;font-size:28px;font-weight:900;color:var(--green);}
-@media(max-width:600px){.sticky-bar{flex-wrap:wrap;justify-content:center;}}
+
+.sb-item{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 20px;flex:1;
+  border-right:1px solid rgba(10,31,68,0.08);
+}
+.sb-item:last-child{border-right:none;}
+
+.sb-label{flex:1;min-width:0;}
+.sb-label-title{
+  font-size:13px;font-weight:700;
+  color:var(--navy);line-height:1.3;
+}
+.sb-label-title span{color:var(--green);}
+.sb-label-sub{font-size:10px;color:#9BAABB;margin-top:1px;line-height:1.2;}
+
+.sb-price{flex-shrink:0;text-align:right;}
+.sb-price-was{font-size:10px;color:#BFCFDF;text-decoration:line-through;line-height:1;}
+.sb-price-now{
+  font-family:'Fraunces',serif;
+  font-size:22px;font-weight:900;
+  color:var(--green);line-height:1.1;
+}
+
+.sb-cta{
+  flex-shrink:0;
+  display:inline-flex;align-items:center;
+  background:linear-gradient(135deg,var(--green),var(--g2));
+  color:#fff;font-weight:700;font-size:12px;
+  padding:8px 16px;border-radius:8px;
+  white-space:nowrap;transition:opacity .2s;
+  text-decoration:none;border:none;cursor:pointer;
+  font-family:'Sora',sans-serif;
+}
+.sb-cta:hover{opacity:.88;}
+.sb-cta.dark{background:linear-gradient(135deg,var(--navy),var(--blue));}
+
+/* Móvil: ocultar columna de la Guía, mostrar solo Combo + Prompts */
+@media(max-width:680px){
+  .sb-item.sb-hide{display:none;}
+  .sb-item{padding:9px 14px;gap:10px;}
+  .sb-label-title{font-size:12px;}
+  .sb-price-now{font-size:20px;}
+  .sb-cta{font-size:11px;padding:7px 12px;}
+}
 
 /* Reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── PRODUCTOS / UPSELL SECTION ── */
+.upsell-section{
+  padding:100px 0;
+  background:var(--white);
+  position:relative;
+  overflow:hidden;
+}
+.upsell-section::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+
+/* Tabs */
+.prod-tabs{
+  display:flex;gap:8px;margin-bottom:44px;
+  background:rgba(10,31,68,0.05);border-radius:14px;padding:6px;
+  max-width:520px;
+}
+.prod-tab{
+  flex:1;padding:12px 16px;text-align:center;border-radius:10px;
+  font-weight:700;font-size:13px;color:#8899AA;
+  cursor:pointer;transition:all .25s;border:none;background:none;
+  font-family:'Sora',sans-serif;
+}
+.prod-tab.active{
+  background:var(--white);color:var(--navy);
+  box-shadow:0 2px 12px rgba(10,31,68,0.12);
+}
+
+/* Panel grid */
+.prod-panel{display:none;}
+.prod-panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* Product showcase 2-col */
+.prod-showcase{
+  display:grid;grid-template-columns:1fr 400px;gap:56px;align-items:center;
+}
+@media(max-width:860px){.prod-showcase{grid-template-columns:1fr;}}
+
+.ps-left{}
+.ps-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,179,126,0.08);border:1px solid rgba(0,179,126,0.22);
+  border-radius:100px;padding:5px 16px;margin-bottom:20px;
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;
+  color:var(--green);text-transform:uppercase;
+}
+.ps-h{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,46px);font-weight:900;line-height:1.02;color:var(--navy);margin-bottom:16px;letter-spacing:-0.5px;}
+.ps-h em{color:var(--green);font-style:italic;}
+.ps-desc{font-size:15px;font-weight:300;color:#6B8099;line-height:1.75;margin-bottom:28px;}
+.ps-desc strong{color:var(--navy);font-weight:700;}
+.ps-includes{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.psi{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#4A6080;padding:10px 14px;background:rgba(0,179,126,0.04);border-radius:10px;border:1px solid rgba(0,179,126,0.1);line-height:1.5;}
+.psi::before{content:'✓';color:var(--green);font-weight:800;flex-shrink:0;}
+.ps-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--green),var(--g2));
+  color:#fff;font-weight:800;font-size:16px;
+  padding:16px 32px;border-radius:14px;
+  box-shadow:0 6px 30px rgba(0,179,126,0.38);
+  transition:all .25s;border:none;cursor:pointer;text-decoration:none;
+}
+.ps-cta:hover{transform:translateY(-3px);box-shadow:0 12px 42px rgba(0,179,126,0.56);}
+
+/* Product price card right */
+.ps-card{
+  background:var(--navy);
+  border-radius:26px;padding:40px;
+  box-shadow:0 24px 60px rgba(10,31,68,0.2);
+  position:relative;overflow:hidden;
+}
+.ps-card::before{
+  content:'';position:absolute;
+  top:-1px;left:15%;right:15%;height:3px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+.psc-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,179,126,0.12);border:1px solid rgba(0,179,126,0.25);
+  border-radius:100px;padding:4px 14px;
+  font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;
+  color:var(--green);text-transform:uppercase;margin-bottom:18px;
+}
+.psc-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite;flex-shrink:0;}
+.psc-icon{font-size:44px;margin-bottom:14px;}
+.psc-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;line-height:1.1;}
+.psc-sub{font-size:11px;color:rgba(255,255,255,0.4);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:22px;}
+.psc-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.psc-was{font-size:14px;color:rgba(255,255,255,0.25);text-decoration:line-through;}
+.psc-now{font-family:'Fraunces',serif;font-size:64px;font-weight:900;color:var(--green);line-height:1;}
+.psc-usd{font-size:13px;color:rgba(255,255,255,0.3);padding-bottom:6px;}
+.psc-save{
+  display:inline-block;margin-bottom:20px;
+  background:rgba(0,179,126,0.1);border:1px solid rgba(0,179,126,0.2);
+  border-radius:100px;padding:4px 14px;font-size:10px;color:var(--green);font-weight:700;
+}
+.psc-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:22px;}
+.psc-f{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.55);}
+.psc-f::before{content:'·';color:var(--green);font-size:18px;line-height:0.8;}
+.psc-trust{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:12px;}
+.psc-trust span{font-size:10px;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:4px;}
+.psc-trust span::before{content:'✓';color:var(--green);}
+
+/* COMBO panel */
+.combo-showcase{
+  background:linear-gradient(135deg,var(--navy) 0%,#163B7A 100%);
+  border-radius:28px;padding:52px;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 60px rgba(10,31,68,0.2);
+}
+.combo-showcase::before{
+  content:'';position:absolute;
+  top:0;right:0;width:400px;height:100%;
+  background:radial-gradient(ellipse 80% 80% at 100% 50%, rgba(0,179,126,0.12) 0%, transparent 70%);
+}
+.combo-grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;
+}
+@media(max-width:760px){.combo-grid{grid-template-columns:1fr;}}
+.combo-left{}
+.combo-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,179,126,0.12);border:1px solid rgba(0,179,126,0.3);
+  border-radius:100px;padding:5px 16px;margin-bottom:18px;
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;
+  color:var(--green);text-transform:uppercase;
+}
+.combo-h{font-family:'Fraunces',serif;font-size:clamp(26px,4vw,44px);font-weight:900;line-height:1.02;color:#fff;margin-bottom:14px;}
+.combo-h em{color:var(--green);font-style:italic;}
+.combo-desc{font-size:15px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:28px;}
+.combo-items-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.ci{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 16px;
+}
+.ci-icon{font-size:22px;flex-shrink:0;}
+.ci-info{}
+.ci-name{font-size:14px;font-weight:700;color:#fff;line-height:1;}
+.ci-price{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;font-family:'Space Mono',monospace;}
+.ci-plus{font-size:22px;color:rgba(0,179,126,0.5);text-align:center;font-weight:900;}
+.combo-right{text-align:center;}
+.combo-savings{
+  background:rgba(0,179,126,0.08);border:1px solid rgba(0,179,126,0.2);
+  border-radius:18px;padding:28px;margin-bottom:24px;
+}
+.cs-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:12px;}
+.cs-price-row{display:flex;align-items:baseline;gap:10px;justify-content:center;margin-bottom:8px;}
+.cs-was{font-size:18px;color:rgba(255,255,255,0.22);text-decoration:line-through;}
+.cs-now{font-family:'Fraunces',serif;font-size:80px;font-weight:900;color:var(--green);line-height:1;}
+.cs-usd{font-size:16px;color:rgba(255,255,255,0.3);padding-bottom:8px;}
+.cs-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.cs-badge{
+  background:rgba(0,179,126,0.12);border:1px solid rgba(0,179,126,0.2);
+  border-radius:100px;padding:4px 12px;font-size:10px;color:var(--green);font-weight:700;
+}
+.combo-trust{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:12px;}
+.combo-trust span{font-size:10px;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:4px;}
+.combo-trust span::before{content:'✓';color:var(--green);}
+
+/* ── VOL 2 TEASER ── */
+.vol2-teaser{
+  padding:100px 0;
+  background:var(--navy);
+  position:relative;overflow:hidden;
+}
+.vt-grid-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,179,126,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,179,126,0.03) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+.vt-glow-l{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(22,59,122,0.4) 0%,transparent 65%);left:-200px;top:50%;transform:translateY(-50%);}
+.vt-glow-r{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,179,126,0.07) 0%,transparent 65%);right:-100px;bottom:-80px;}
+
+.vol2-inner{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 460px;gap:64px;align-items:center;
+}
+@media(max-width:900px){.vol2-inner{grid-template-columns:1fr;}}
+
+.vt-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(160,200,255,0.06);border:1px solid rgba(160,200,255,0.2);
+  border-radius:100px;padding:5px 16px;margin-bottom:20px;
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;
+  color:rgba(160,200,255,0.7);text-transform:uppercase;
+}
+.vt-dot{width:6px;height:6px;border-radius:50%;background:rgba(160,200,255,0.7);animation:blink 2.5s infinite;flex-shrink:0;}
+.vt-h{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.0;color:#fff;margin-bottom:16px;letter-spacing:-0.5px;}
+.vt-h em{color:rgba(160,200,255,0.85);font-style:italic;}
+.vt-desc{font-size:15px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:24px;}
+.vt-caps{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.vtc{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(22,59,122,0.25);border:1px solid rgba(100,150,255,0.1);
+  border-radius:10px;padding:12px 16px;font-size:13px;color:rgba(255,255,255,0.6);
+}
+.vtc::before{content:'→';color:rgba(160,200,255,0.5);font-weight:700;flex-shrink:0;}
+.vt-pricing{
+  display:flex;align-items:center;gap:24px;
+  background:rgba(22,59,122,0.3);border:1px solid rgba(100,150,255,0.12);
+  border-radius:14px;padding:20px 24px;
+}
+.vtp-item .vtp-num{font-family:'Fraunces',serif;font-size:34px;font-weight:900;color:rgba(160,200,255,0.7);line-height:1;}
+.vtp-item .vtp-label{font-size:10px;color:rgba(255,255,255,0.28);font-family:'Space Mono',monospace;letter-spacing:1px;margin-top:2px;}
+.vtp-div{width:1px;height:44px;background:rgba(255,255,255,0.08);}
+
+/* Vol2 card */
+.vol2-card{
+  background:rgba(6,14,28,0.9);
+  border:1px solid rgba(100,150,255,0.2);
+  border-radius:26px;padding:40px;
+  position:relative;overflow:hidden;
+}
+.vol2-card::before{
+  content:'';position:absolute;
+  top:-1px;left:20%;right:20%;height:3px;
+  background:linear-gradient(90deg,transparent,rgba(160,200,255,0.6),transparent);
+}
+.v2-chip{
+  display:inline-block;font-family:'Space Mono',monospace;
+  font-size:8px;letter-spacing:3px;color:rgba(160,200,255,0.5);
+  text-transform:uppercase;border:1px solid rgba(160,200,255,0.12);
+  border-radius:100px;padding:4px 14px;margin-bottom:18px;
+}
+.v2-title{font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.2;}
+.v2-sub{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:24px;}
+
+/* Mock book cover */
+.v2-mock{
+  background:linear-gradient(135deg,rgba(22,59,122,0.6),rgba(10,31,68,0.9));
+  border:1px solid rgba(100,150,255,0.15);border-radius:14px;
+  padding:28px 24px;margin-bottom:22px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.v2-mock::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,rgba(100,150,255,0.015) 0px,rgba(100,150,255,0.015) 1px,transparent 1px,transparent 4px
+  );
+}
+.v2m-lock{font-size:52px;margin-bottom:10px;opacity:0.5;filter:grayscale(0.5);}
+.v2m-text{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.65;}
+.v2m-text strong{color:rgba(160,200,255,0.7);}
+
+/* Progress */
+.v2-progress{margin-bottom:20px;}
+.v2p-label{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:rgba(100,150,200,0.4);margin-bottom:7px;}
+.v2p-bar{height:6px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden;}
+.v2p-fill{height:100%;width:72%;background:linear-gradient(90deg,rgba(100,150,255,0.5),rgba(0,179,126,0.7));border-radius:100px;position:relative;overflow:hidden;}
+.v2p-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.22) 50%,transparent 100%);animation:shimmer 2s infinite;}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.v2-notify{
+  display:block;width:100%;
+  background:rgba(100,150,255,0.08);border:1px solid rgba(100,150,255,0.2);
+  color:rgba(160,200,255,0.7);font-weight:700;font-size:13px;font-family:'Sora',sans-serif;
+  padding:14px 24px;border-radius:12px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.v2-notify:hover{background:rgba(100,150,255,0.14);border-color:rgba(100,150,255,0.35);}
+.v2-hint{text-align:center;margin-top:12px;font-size:11px;color:rgba(255,255,255,0.2);}
+.v2-hint strong{color:rgba(160,200,255,0.4);}
+
+/* Interactive counter in combo */
+.combo-counter{
+  background:rgba(0,0,0,0.2);border:1px solid rgba(0,179,126,0.15);
+  border-radius:12px;padding:14px;margin-bottom:18px;
+}
+.cc-label{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;}
+.cc-val{font-family:'Fraunces',serif;font-size:40px;font-weight:900;color:var(--green);line-height:1;transition:all .3s;}
+
+/* Hover reveal on prompt cards */
+.prompt-preview{
+  display:flex;flex-direction:column;gap:8px;margin-bottom:24px;
+}
+.pp-card{
+  background:rgba(10,31,68,0.04);border:1px solid rgba(10,31,68,0.08);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:all .25s;
+}
+.pp-card:hover,.pp-card.active{
+  border-color:rgba(0,179,126,0.3);background:rgba(0,179,126,0.05);
+}
+.pp-num{width:28px;height:28px;border-radius:7px;flex-shrink:0;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--green);}
+.pp-name{font-size:13px;font-weight:700;color:var(--navy);flex:1;}
+.pp-result{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--green);margin-left:auto;}
+.pp-more{text-align:center;font-size:12px;color:#8899AA;padding:8px;}
+
+/* nav links */
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link-item{font-size:12px;color:#6B8099;padding:6px 12px;border-radius:8px;transition:color .2s;}
+.nav-link-item:hover{color:var(--navy);}
+@media(max-width:760px){.nav-links{display:none;}}
+
 </style>
 </head>
 <body>
@@ -607,7 +959,12 @@ footer{
       <div class="nav-sub">IA Sin Complicaciones</div>
     </div>
   </div>
-  <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta">Obtener por $9.99</a>
+  <div class="nav-links">
+    <a href="#productos" class="nav-link-item">Prompts</a>
+    <a href="#productos" class="nav-link-item">Combo</a>
+    <a href="#vol2" class="nav-link-item">Vol. 2</a>
+  </div>
+  <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout nav-cta" style="width:auto!important;padding:9px 18px!important;font-size:13px!important;border-radius:10px!important;box-shadow:none!important;">Guía $9.99</a>
 </nav>
 
 <!-- HERO -->
@@ -629,12 +986,12 @@ footer{
           <div>
             <div class="ps-label">Precio de lanzamiento</div>
             <div style="display:flex;align-items:flex-end;gap:10px;">
-              <span class="ps-was">$17</span>
+              <span class="ps-was">$19.99</span>
               <span class="ps-price">$9.99</span>
               <span class="ps-usd">USD</span>
             </div>
           </div>
-          <div class="ps-badge">🔥 41% OFF</div>
+          <div class="ps-badge">🔥 50% OFF</div>
         </div>
         <div class="hero-btns">
           <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout btn-g">🚀 Quiero la Guía por $9.99</a>
@@ -847,10 +1204,10 @@ footer{
         <div class="pcl-title">Guía Estratégica</div>
         <div class="pcl-sub">El punto de entrada al ecosistema IA Sin Complicaciones</div>
         <div class="pcl-price-area">
-          <div class="pcl-was">Normal: $17.00</div>
+          <div class="pcl-was">Normal: $19.99</div>
           <div class="pcl-now">$9.99</div>
           <div class="pcl-usd">USD</div>
-          <div class="pcl-save">Ahorras $7 · Valor real $57</div>
+          <div class="pcl-save">Ahorras $10 · Valor real $57</div>
         </div>
         <div class="pcl-features">
           <div class="pcl-f">9 capítulos completos</div>
@@ -889,20 +1246,212 @@ footer{
       </div>
     </div>
 
-    <!-- UPSELL PACK TOTAL -->
-    <div class="upsell reveal">
+    <!-- COMBO MINI STRIP -->
+    <div class="upsell reveal" style="margin-top:20px;">
       <div class="upsell-text">
-        <h4>¿Los quieres todos? Pack Total.</h4>
-        <p>Guía Estratégica + 25 Prompts juntos. Ahorras $2.98 vs comprar por separado y tienes todo listo para ejecutar desde hoy.</p>
+        <h4>¿Guía + 25 Prompts juntos?</h4>
+        <p>El Pack Total incluye todo. Ahorras $2.98 vs comprar por separado · 81% OFF vs valor real de $104.</p>
       </div>
       <div class="upsell-price">
+        <div style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:line-through;margin-bottom:2px;">$22.98</div>
         <div class="upsell-num">$20.00</div>
         <div class="upsell-label">Pack Total · USD</div>
       </div>
-      <a href="https://ia-sin-complicaciones.vercel.app/" class="upsell-btn">Ver Pack Total →</a>
+      <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout upsell-btn" style="display:inline-flex!important;width:auto!important;padding:12px 22px!important;font-size:14px!important;border-radius:12px!important;">🎯 Pack Total $20 →</a>
     </div>
   </div>
 </section>
+
+
+<!-- ═══ PRODUCTOS / UPSELL INTERACTIVO ═══ -->
+<section class="upsell-section" id="productos">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:52px;">
+      <div class="sec-tag" style="justify-content:center;">Elige tu camino</div>
+      <h2 class="sec-h" style="text-align:center;">Tres formas de<br><em>potenciar tu guía</em></h2>
+      <p class="sec-desc" style="margin:0 auto;text-align:center;">Empieza con la Guía, potencia con los Prompts, o tómalo todo. Tú eliges tu punto de entrada.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="prod-tabs">
+      <button class="prod-tab active" onclick="showPanel('prompts',this)">⚡ Pack 25 Prompts</button>
+      <button class="prod-tab" onclick="showPanel('combo',this)">🎯 Pack Total · Mejor valor</button>
+    </div>
+
+    <!-- Panel: Pack 25 Prompts -->
+    <div class="prod-panel active" id="panel-prompts">
+      <div class="prod-showcase">
+        <div class="ps-left">
+          <div class="ps-eyebrow">🔓 Complemento Esencial</div>
+          <h2 class="ps-h">Ya tienes el método.<br>Ahora el prompt <em>exacto.</em></h2>
+          <p class="ps-desc">La guía te enseñó cómo funciona la IA. El Pack te da las herramientas listas: <strong>25 prompts probados para copiar y pegar</strong> — el de presupuesto, suscripciones y 23 más.</p>
+
+          <div class="prompt-preview">
+            <div class="pp-card active" onclick="activatePrompt(this,'$1,340/año')">
+              <div class="pp-num">#03</div><div class="pp-name">Presupuesto 50/30/20</div><div class="pp-result">$1,340/año</div>
+            </div>
+            <div class="pp-card" onclick="activatePrompt(this,'$1,872/año')">
+              <div class="pp-num">#10</div><div class="pp-name">Caza de suscripciones</div><div class="pp-result">$1,872/año</div>
+            </div>
+            <div class="pp-card" onclick="activatePrompt(this,'+340% leads')">
+              <div class="pp-num">#06</div><div class="pp-name">LinkedIn para clientes</div><div class="pp-result">+340% leads</div>
+            </div>
+            <div class="pp-card" onclick="activatePrompt(this,'3x ingresos')">
+              <div class="pp-num">#17</div><div class="pp-name">Contenido que convierte</div><div class="pp-result">3x ingresos</div>
+            </div>
+            <div class="pp-more">+ 21 prompts más de productividad, salud y negocios 🔒</div>
+          </div>
+
+          <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout ps-cta" style="display:inline-flex!important;width:auto!important;padding:16px 32px!important;font-size:16px!important;border-radius:14px!important;box-shadow:0 6px 30px rgba(0,179,126,0.38)!important;">
+            🔓 Desbloquear los 25 Prompts
+          </a>
+        </div>
+        <div>
+          <div class="ps-card">
+            <div class="psc-badge"><span class="psc-dot"></span>Disponible ahora</div>
+            <div class="psc-icon">⚡</div>
+            <div class="psc-title">Pack de 25 Prompts</div>
+            <div class="psc-sub">El complemento de la Guía Estratégica</div>
+            <div class="psc-price-row">
+              <span class="psc-was">$57</span>
+              <span class="psc-now">$12.99</span>
+              <span class="psc-usd">USD</span>
+            </div>
+            <div class="psc-save">Ahorras $44 vs valor real</div>
+            <div class="psc-feats">
+              <div class="psc-f">25 prompts en categorías clave</div>
+              <div class="psc-f">Finanzas, productividad, contenido</div>
+              <div class="psc-f">ChatGPT · Claude · Gemini</div>
+              <div class="psc-f">PDF descargable · Sin suscripción</div>
+            </div>
+            <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout">
+              🔓 Quiero los 25 Prompts
+            </a>
+            <div class="psc-trust">
+              <span>Pago seguro Hotmart</span>
+              <span>Acceso inmediato</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Combo Pack Total -->
+    <div class="prod-panel" id="panel-combo">
+      <div class="combo-showcase">
+        <div class="combo-grid">
+          <div class="combo-left">
+            <div class="combo-eyebrow">⚡ Pack Total · Máximo valor</div>
+            <h2 class="combo-h">Todo junto.<br><em>Un solo precio.</em></h2>
+            <p class="combo-desc">La combinación más inteligente. Método + Herramientas. Todo listo para pasar del aprendizaje a la ejecución en un solo movimiento.</p>
+            <div class="combo-items-grid">
+              <div class="ci">
+                <div class="ci-icon">📖</div>
+                <div class="ci-info">
+                  <div class="ci-name">Guía Estratégica Vol. 1</div>
+                  <div class="ci-price">9 capítulos · PDF · 9 escudos</div>
+                </div>
+              </div>
+              <div class="ci-plus">+</div>
+              <div class="ci">
+                <div class="ci-icon">⚡</div>
+                <div class="ci-info">
+                  <div class="ci-name">Pack de 25 Prompts</div>
+                  <div class="ci-price">25 prompts probados · PDF · todas las IAs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="combo-right">
+            <div class="combo-savings">
+              <div class="cs-label">Precio Pack Total</div>
+              <div class="cs-price-row">
+                <span class="cs-was">$22.98</span>
+                <span class="cs-now">$20</span>
+                <span class="cs-usd">USD</span>
+              </div>
+              <div class="cs-badges">
+                <div class="cs-badge">81% OFF vs valor real ($104)</div>
+                <div class="cs-badge">Ahorras $2.98 vs separado</div>
+              </div>
+            </div>
+            <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout">
+              🎯 Quiero el Pack Total por $20
+            </a>
+            <div class="combo-trust">
+              <span>Pago seguro Hotmart</span>
+              <span>Acceso inmediato</span>
+              <span>Sin suscripción</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ VOL. 2 TEASER ═══ -->
+<section class="vol2-teaser" id="vol2">
+  <div class="vt-grid-bg"></div>
+  <div class="vt-glow-l"></div>
+  <div class="vt-glow-r"></div>
+  <div class="wrap">
+    <div class="vol2-inner">
+      <div>
+        <div class="vt-tag"><span class="vt-dot"></span>Próximamente · En producción ahora</div>
+        <h2 class="vt-h">Vol. 2: Del conocimiento<br>a los <em>resultados reales.</em></h2>
+        <p class="vt-desc">El Vol. 1 te dio el método. El Vol. 2 te da las herramientas, automatizaciones y el flujo para que la IA trabaje para ti — no al revés. <strong style="color:rgba(255,255,255,0.7);">Muy pronto.</strong></p>
+        <div class="vt-caps">
+          <div class="vtc">Fórmula C.R.A.C. para prompts avanzados que siempre funcionan</div>
+          <div class="vtc">IA según tu perfil: empleado, freelance, emprendedor o estudiante</div>
+          <div class="vtc">Automatizaciones con Zapier paso a paso — sin código</div>
+          <div class="vtc">Contenido que vende + sistema de salud financiera con IA</div>
+          <div class="vtc">Flujo de 48 horas: de cero a primeros resultados reales</div>
+        </div>
+        <div class="vt-pricing">
+          <div class="vtp-item">
+            <div class="vtp-num">$16.99</div>
+            <div class="vtp-label">Vol. 2 solo</div>
+          </div>
+          <div class="vtp-div"></div>
+          <div class="vtp-item">
+            <div class="vtp-num">$21.98</div>
+            <div class="vtp-label">Combo Vol.1+2</div>
+          </div>
+          <div class="vtp-div"></div>
+          <div class="vtp-item">
+            <div class="vtp-num" style="font-size:18px;color:rgba(160,200,255,0.4);">Estimados</div>
+            <div class="vtp-label">Sujeto a cambio</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="vol2-card">
+          <div class="v2-chip">Guía Estratégica · Vol. 2</div>
+          <div class="v2-title">Del Conocimiento<br>a los Resultados</div>
+          <div class="v2-sub">IA Sin Complicaciones · Próximamente</div>
+          <div class="v2-mock">
+            <div class="v2m-lock">🔐</div>
+            <div class="v2m-text">
+              Este volumen está en producción activa.<br>
+              <strong>Completa el Vol. 1 primero</strong> — es el prerrequisito para aprovechar el Vol. 2 al máximo.
+            </div>
+          </div>
+          <div class="v2-progress">
+            <div class="v2p-label"><span>Progreso de producción</span><span>72%</span></div>
+            <div class="v2p-bar"><div class="v2p-fill"></div></div>
+          </div>
+          <button class="v2-notify" style="cursor:default;opacity:0.7;">
+            🔐 Disponible muy pronto
+          </button>
+          <div class="v2-hint">Precio estimado: <strong>$16.99 USD</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- FOOTER -->
 <footer>
@@ -919,20 +1468,52 @@ footer{
   </div>
   <p class="footer-txt">
     © 2025 IA Sin Complicaciones · Pagos procesados por <a href="https://hotmart.com" target="_blank">Hotmart</a><br>
-    <a href="https://ia-sin-complicaciones-prompt-packs.vercel.app/">Pack de Prompts</a> · <a href="https://ia-sin-complicaciones.vercel.app/">Pack Total</a>
+    <a href="https://ia-sin-complicaciones-prompt-packs.vercel.app/">Pack de Prompts · $12.99</a> · <a href="https://ia-sin-complicaciones.vercel.app/">Pack Total · $20</a> · <a href="#vol2">Vol. 2 — Próximamente</a>
   </p>
 </footer>
 
 <!-- STICKY -->
 <div class="sticky-bar" id="stickyBar">
-  <div>
-    <div class="sb-t">Guía Estratégica Vol. 1 — <span>Precio de lanzamiento</span></div>
-    <div style="font-size:11px;color:#8899AA;margin-top:2px;">9 capítulos · Acceso inmediato</div>
+
+  <!-- Guía (oculta en móvil) -->
+  <div class="sb-item sb-hide">
+    <div class="sb-label">
+      <div class="sb-label-title">Guía Estratégica Vol. 1</div>
+      <div class="sb-label-sub">9 capítulos · PDF · Acceso inmediato</div>
+    </div>
+    <div class="sb-price">
+      <div class="sb-price-was">$19.99</div>
+      <div class="sb-price-now">$9.99</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout sb-cta" style="background:linear-gradient(135deg,var(--green),var(--g2))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Comprar →</a>
   </div>
-  <div class="sb-p">$9.99</div>
-  <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout" style="flex-shrink:0;padding:12px 22px!important;font-size:14px!important;border-radius:12px!important;">
-    Comprar →
-  </a>
+
+  <!-- Combo Guía + 25 Prompts -->
+  <div class="sb-item">
+    <div class="sb-label">
+      <div class="sb-label-title">Guía + <span>Pack 25 Prompts</span></div>
+      <div class="sb-label-sub">Ambos juntos · Ahorras $2.98 vs separado</div>
+    </div>
+    <div class="sb-price">
+      <div class="sb-price-was">$22.98</div>
+      <div class="sb-price-now">$20</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sb-cta dark" style="background:linear-gradient(135deg,var(--navy),var(--blue))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Pack Total →</a>
+  </div>
+
+  <!-- Solo 25 Prompts -->
+  <div class="sb-item">
+    <div class="sb-label">
+      <div class="sb-label-title">Solo <span>25 Prompts</span></div>
+      <div class="sb-label-sub">Valor real $57 · Ahorras $44</div>
+    </div>
+    <div class="sb-price">
+      <div class="sb-price-was">$57</div>
+      <div class="sb-price-now">$12.99</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout sb-cta" style="background:linear-gradient(135deg,var(--green),var(--g2))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Prompts →</a>
+  </div>
+
 </div>
 
 <script>
