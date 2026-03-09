@@ -396,6 +396,11 @@ nav{
 .hotmart-fb.hotmart__button-checkout:hover{background:var(--green)!important;}
 .featured .hotmart-fb.hotmart__button-checkout{background:var(--green)!important;}
 .featured .hotmart-fb.hotmart__button-checkout:hover{background:var(--g2)!important;}
+/* Excepción: botones móvil ocultos en desktop aunque Hotmart diga display:block */
+.hotmart-fb.hotmart__button-checkout.sk-mobile{display:none!important;}
+@media(max-width:660px){
+  .hotmart-fb.hotmart__button-checkout.sk-mobile{display:flex!important;}
+}
 
 .btn-soon-block{
   display:block;width:100%;
@@ -619,21 +624,21 @@ footer{
 .sk-btn.accent{background:var(--green);}
 .sk-btn.accent:hover{background:var(--g2);}
 
-/* Mobile: oculta las columnas desktop, muestra 2 botones grandes */
+/* Mobile: oculta las columnas desktop, muestra 2 botones compactos */
+.sk-mobile{display:none!important;}
 @media(max-width:660px){
-  .sticky{border-top:2px solid var(--green);padding:10px 12px;gap:8px;align-items:stretch;}
-  .sk-col{display:none;}
+  .sticky{border-top:2px solid var(--green);padding:8px 10px;gap:6px;align-items:stretch;}
+  .sk-col{display:none!important;}
   .sk-mobile{
     display:flex!important;flex:1;flex-direction:column;
-    align-items:center;justify-content:center;gap:2px;
-    padding:9px 10px;border-radius:3px;text-align:center;
+    align-items:center;justify-content:center;gap:1px;
+    padding:7px 8px;border-radius:3px;text-align:center;
     text-decoration:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
   }
-  .sk-mob-label{font-size:11px;font-weight:700;color:#fff;line-height:1.2;}
-  .sk-mob-price{font-family:'DM Serif Display',serif;font-size:20px;font-weight:900;color:rgba(255,255,255,0.9);line-height:1.1;}
-  .sk-mob-sub{font-size:9px;color:rgba(255,255,255,0.6);line-height:1.2;font-family:'DM Mono',monospace;}
+  .sk-mob-label{font-size:10px;font-weight:700;color:#fff;line-height:1.2;}
+  .sk-mob-price{font-family:'DM Serif Display',serif;font-size:17px;font-weight:900;color:rgba(255,255,255,0.95);line-height:1.1;}
+  .sk-mob-sub{font-size:8px;color:rgba(255,255,255,0.55);line-height:1.2;font-family:'DM Mono',monospace;}
 }
-@media(min-width:661px){.sk-mobile{display:none;}}
 
 /* Triple price comparison */
 .price-trio{margin-bottom:6px;}
@@ -1022,19 +1027,7 @@ footer{
 <!-- STICKY -->
 <div class="sticky" id="stickyBar">
 
-  <!-- DESKTOP: 3 columnas ─────────────────────────── -->
-  <div class="sk-col">
-    <div class="sk-info">
-      <div class="sk-name">Guía Estratégica Vol. 1</div>
-      <div class="sk-sub">9 capítulos · PDF · 50% OFF</div>
-    </div>
-    <div class="sk-price">
-      <div class="sk-was">$19.99</div>
-      <div class="sk-now">$9.99</div>
-    </div>
-    <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout sk-btn" style="background:var(--ink)!important;padding:9px 16px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Comprar →</a>
-  </div>
-
+  <!-- DESKTOP: 2 columnas ─────────────────────────── -->
   <div class="sk-col">
     <div class="sk-info">
       <div class="sk-name">Pack <span>25 Prompts</span></div>
@@ -1059,14 +1052,14 @@ footer{
     <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sk-btn" style="background:var(--ink)!important;padding:9px 16px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Pack Total →</a>
   </div>
 
-  <!-- MÓVIL: 2 botones grandes ─────────────────────── -->
+  <!-- MÓVIL: 2 botones compactos ──────────────────── -->
   <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout sk-mobile" style="background:var(--green)!important;text-decoration:none!important;">
     <span class="sk-mob-label">Pack 25 Prompts</span>
     <span class="sk-mob-price">$12.99</span>
     <span class="sk-mob-sub">Normal $25 · 48% OFF</span>
   </a>
   <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sk-mobile" style="background:var(--ink)!important;text-decoration:none!important;">
-    <span class="sk-mob-label">Guía + Pack · Combo</span>
+    <span class="sk-mob-label">Guía + Pack</span>
     <span class="sk-mob-price">$20.00</span>
     <span class="sk-mob-sub">Normal $44 · 55% OFF</span>
   </a>
