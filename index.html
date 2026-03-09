@@ -99,23 +99,26 @@ nav{
   transform:scale(1.05);
   animation:none;
 }
+/* Desktop: CTA en nav-links, oculto en nav-brand */
+.nav-cta-mob{display:none!important;}
+.nav-cta-desk{display:inline-flex!important;}
+
 @media(max-width:700px){
   .nav-tagline{display:none;}
-  .nav-links .nav-link{display:none;}
-  .nav-links{display:flex;}
-  .nav-cta{
-    font-size:10px;
-    padding:6px 12px;
-    margin-left:0;
-    gap:0;
-    border-radius:40px;
-    flex-direction:column;
-    line-height:1.25;
-    text-align:center;
+  .nav-links{display:none!important;}        /* oculta todo el bloque de links en móvil */
+  .nav-brand{display:flex;align-items:center;gap:10px;flex:1;}
+  /* Muestra el CTA pegado al logo */
+  .nav-cta-mob{
+    display:inline-flex!important;
+    font-size:10px;padding:6px 12px;
+    margin-left:auto;               /* empuja el botón al extremo derecho del brand */
+    flex-direction:column;gap:0;
+    border-radius:40px;line-height:1.25;text-align:center;
   }
   .nav-cta-line1{font-size:10px;font-weight:800;}
-  .nav-cta-line2{font-size:11px;font-weight:900;color:rgba(255,255,255,0.95);}
+  .nav-cta-line2{font-size:11px;font-weight:900;}
 }
+
 /* Desktop: una sola línea */
 @media(min-width:701px){
   .nav-cta{flex-direction:row;white-space:nowrap;}
@@ -730,12 +733,16 @@ footer{
   <div class="nav-brand">
     <span class="nav-logo">IA Sin <span>Complicaciones</span></span>
     <span class="nav-tagline">Tiempo Inteligente</span>
+    <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta nav-cta-mob" target="_blank" rel="noopener">
+      <span class="nav-cta-line1">🚀 Quiero la guía</span>
+      <span class="nav-cta-line2">por $9.99</span>
+    </a>
   </div>
   <div class="nav-links">
     <a href="#productos" class="nav-link">Productos</a>
     <a href="#vol2" class="nav-link">Vol. 2</a>
     <a href="https://ia-sin-complicaciones-prompt-packs.vercel.app/" class="nav-link">25 Prompts</a>
-    <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta" target="_blank" rel="noopener">
+    <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta nav-cta-desk" target="_blank" rel="noopener">
       <span class="nav-cta-line1">🚀 Quiero la guía</span>
       <span class="nav-cta-line2">por $9.99</span>
     </a>
