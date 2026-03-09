@@ -594,6 +594,8 @@ footer{
   display:flex;align-items:stretch;
   transform:translateY(100%);transition:transform .4s ease;
   box-shadow:0 -2px 20px rgba(10,31,68,0.08);
+  width:100%;max-width:100vw;overflow:hidden;
+  box-sizing:border-box;
 }
 .sticky.visible{transform:translateY(0);}
 
@@ -627,17 +629,36 @@ footer{
 /* Mobile: oculta las columnas desktop, muestra 2 botones compactos */
 .sk-mobile{display:none!important;}
 @media(max-width:660px){
-  .sticky{border-top:2px solid var(--green);padding:8px 10px;gap:6px;align-items:stretch;}
+  .sticky{
+    border-top:2px solid var(--green);
+    padding:6px 8px;gap:5px;
+    align-items:stretch;
+    width:100%;box-sizing:border-box;overflow:hidden;
+  }
   .sk-col{display:none!important;}
   .sk-mobile{
-    display:flex!important;flex:1;flex-direction:column;
+    display:flex!important;flex:1;min-width:0;
+    flex-direction:column;
     align-items:center;justify-content:center;gap:1px;
-    padding:7px 8px;border-radius:3px;text-align:center;
-    text-decoration:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
+    padding:6px 4px;border-radius:3px;text-align:center;
+    text-decoration:none;border:none;cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    overflow:hidden;box-sizing:border-box;
   }
-  .sk-mob-label{font-size:10px;font-weight:700;color:#fff;line-height:1.2;}
-  .sk-mob-price{font-family:'DM Serif Display',serif;font-size:17px;font-weight:900;color:rgba(255,255,255,0.95);line-height:1.1;}
-  .sk-mob-sub{font-size:8px;color:rgba(255,255,255,0.55);line-height:1.2;font-family:'DM Mono',monospace;}
+  .sk-mob-label{
+    font-size:9px;font-weight:700;color:#fff;line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;
+  }
+  .sk-mob-price{
+    font-family:'DM Serif Display',serif;
+    font-size:15px;font-weight:900;
+    color:rgba(255,255,255,0.95);line-height:1.1;
+  }
+  .sk-mob-sub{
+    font-size:7px;color:rgba(255,255,255,0.55);line-height:1.2;
+    font-family:'DM Mono',monospace;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;
+  }
 }
 
 /* Triple price comparison */
