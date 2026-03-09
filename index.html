@@ -584,58 +584,50 @@ footer{
   position:fixed;bottom:0;left:0;right:0;z-index:99;
   background:#fff;
   border-top:2px solid var(--green);
-  padding:0;
   display:flex;align-items:stretch;
   transform:translateY(100%);transition:transform .4s ease;
   box-shadow:0 -2px 20px rgba(0,0,0,0.08);
   font-family:'Sora',sans-serif;
 }
 .sticky-bar.visible{transform:translateY(0);}
-
 .sb-item{
-  display:flex;align-items:center;gap:14px;
+  display:flex;align-items:center;gap:12px;
   padding:10px 20px;flex:1;
   border-right:1px solid rgba(10,31,68,0.08);
 }
 .sb-item:last-child{border-right:none;}
-
 .sb-label{flex:1;min-width:0;}
-.sb-label-title{
-  font-size:13px;font-weight:700;
-  color:var(--navy);line-height:1.3;
-}
+.sb-label-title{font-size:13px;font-weight:700;color:var(--navy);line-height:1.3;}
 .sb-label-title span{color:var(--green);}
-.sb-label-sub{font-size:10px;color:#9BAABB;margin-top:1px;line-height:1.2;}
-
+.sb-label-sub{font-size:10px;color:#9BAABB;margin-top:1px;}
 .sb-price{flex-shrink:0;text-align:right;}
 .sb-price-was{font-size:10px;color:#BFCFDF;text-decoration:line-through;line-height:1;}
-.sb-price-now{
-  font-family:'Fraunces',serif;
-  font-size:22px;font-weight:900;
-  color:var(--green);line-height:1.1;
-}
-
+.sb-price-now{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:var(--green);line-height:1.1;}
 .sb-cta{
-  flex-shrink:0;
-  display:inline-flex;align-items:center;
-  background:linear-gradient(135deg,var(--green),var(--g2));
+  flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
   color:#fff;font-weight:700;font-size:12px;
   padding:8px 16px;border-radius:8px;
   white-space:nowrap;transition:opacity .2s;
   text-decoration:none;border:none;cursor:pointer;
   font-family:'Sora',sans-serif;
 }
-.sb-cta:hover{opacity:.88;}
-.sb-cta.dark{background:linear-gradient(135deg,var(--navy),var(--blue));}
-
-/* Móvil: ocultar columna de la Guía, mostrar solo Combo + Prompts */
+.sb-cta:hover{opacity:.85;}
+/* Móvil: solo 2 botones grandes */
 @media(max-width:680px){
-  .sb-item.sb-hide{display:none;}
-  .sb-item{padding:9px 14px;gap:10px;}
-  .sb-label-title{font-size:12px;}
-  .sb-price-now{font-size:20px;}
-  .sb-cta{font-size:11px;padding:7px 12px;}
+  .sticky-bar{padding:10px 12px;gap:8px;align-items:center;}
+  .sb-item{display:none;}
+  .sb-hide-mobile{display:none!important;}
+  .sb-mobile-btn{
+    display:flex!important;flex:1;
+    flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    padding:9px 8px;border-radius:10px;text-align:center;
+    text-decoration:none;border:none;cursor:pointer;font-family:'Sora',sans-serif;
+  }
+  .sb-mobile-label{font-size:11px;font-weight:700;color:#fff;line-height:1.2;}
+  .sb-mobile-price{font-family:'Fraunces',serif;font-size:18px;font-weight:900;color:rgba(255,255,255,0.92);line-height:1.1;}
+  .sb-mobile-sub{font-size:9px;color:rgba(255,255,255,0.6);line-height:1.2;}
 }
+@media(min-width:681px){.sb-mobile-btn{display:none;}}
 
 /* Reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
@@ -1475,11 +1467,11 @@ footer{
 <!-- STICKY -->
 <div class="sticky-bar" id="stickyBar">
 
-  <!-- Guía (oculta en móvil) -->
-  <div class="sb-item sb-hide">
+  <!-- DESKTOP: 3 columnas -->
+  <div class="sb-item sb-hide-mobile">
     <div class="sb-label">
-      <div class="sb-label-title">Guía Estratégica Vol. 1</div>
-      <div class="sb-label-sub">9 capítulos · PDF · Acceso inmediato</div>
+      <div class="sb-label-title">Guía Vol. 1</div>
+      <div class="sb-label-sub">9 capítulos · PDF</div>
     </div>
     <div class="sb-price">
       <div class="sb-price-was">$19.99</div>
@@ -1487,22 +1479,18 @@ footer{
     </div>
     <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout sb-cta" style="background:linear-gradient(135deg,var(--green),var(--g2))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Comprar →</a>
   </div>
-
-  <!-- Combo Guía + 25 Prompts -->
-  <div class="sb-item">
+  <div class="sb-item sb-hide-mobile">
     <div class="sb-label">
-      <div class="sb-label-title">Guía + <span>Pack 25 Prompts</span></div>
-      <div class="sb-label-sub">Ambos juntos · Ahorras $2.98 vs separado</div>
+      <div class="sb-label-title">Guía + <span>25 Prompts</span></div>
+      <div class="sb-label-sub">Ahorras $2.98 vs separado</div>
     </div>
     <div class="sb-price">
       <div class="sb-price-was">$22.98</div>
       <div class="sb-price-now">$20</div>
     </div>
-    <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sb-cta dark" style="background:linear-gradient(135deg,var(--navy),var(--blue))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Pack Total →</a>
+    <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sb-cta" style="background:linear-gradient(135deg,var(--navy),var(--blue))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Pack Total →</a>
   </div>
-
-  <!-- Solo 25 Prompts -->
-  <div class="sb-item">
+  <div class="sb-item sb-hide-mobile">
     <div class="sb-label">
       <div class="sb-label-title">Solo <span>25 Prompts</span></div>
       <div class="sb-label-sub">Valor real $57 · Ahorras $44</div>
@@ -1513,6 +1501,18 @@ footer{
     </div>
     <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout sb-cta" style="background:linear-gradient(135deg,var(--green),var(--g2))!important;padding:8px 16px!important;font-size:12px!important;border-radius:8px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Prompts →</a>
   </div>
+
+  <!-- MÓVIL: solo 2 botones -->
+  <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout sb-mobile-btn" style="background:linear-gradient(135deg,var(--green),var(--g2))!important;text-decoration:none!important;">
+    <span class="sb-mobile-label">Guía Vol. 1</span>
+    <span class="sb-mobile-price">$9.99</span>
+    <span class="sb-mobile-sub">50% OFF · lanzamiento</span>
+  </a>
+  <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sb-mobile-btn" style="background:linear-gradient(135deg,var(--navy),var(--blue))!important;text-decoration:none!important;">
+    <span class="sb-mobile-label">Guía + 25 Prompts</span>
+    <span class="sb-mobile-price">$20</span>
+    <span class="sb-mobile-sub">Pack Total · mejor valor</span>
+  </a>
 
 </div>
 
