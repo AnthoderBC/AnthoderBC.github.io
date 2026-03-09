@@ -43,13 +43,67 @@ nav{
 .nav-link{font-size:12px;color:var(--muted);padding:8px 14px;transition:color .2s;}
 .nav-link:hover{color:var(--ink);}
 .nav-cta{
-  font-family:'DM Mono',monospace;font-size:11px;font-weight:500;
-  background:var(--ink);color:var(--paper);
-  padding:8px 18px;border-radius:3px;letter-spacing:0.5px;
-  transition:all .2s;margin-left:8px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:800;
+  background:linear-gradient(135deg,#00C48C,#2ECC71);
+  color:#fff!important;
+  padding:10px 22px;
+  border-radius:50px;
+  margin-left:14px;
+  white-space:nowrap;
+  display:inline-flex!important;align-items:center;gap:5px;
+  width:auto!important;
+  text-decoration:none!important;
+  border:none;cursor:pointer;
+  position:relative;overflow:hidden;
+  animation:navpulse 1.6s ease-in-out infinite;
+  letter-spacing:0;
 }
-.nav-cta:hover{background:var(--green);}
-@media(max-width:700px){.nav-tagline,.nav-links{display:none;}}
+/* barrido de luz */
+.nav-cta::before{
+  content:'';
+  position:absolute;top:0;left:-75%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+  transform:skewX(-20deg);
+  animation:navshine 2s ease-in-out infinite;
+}
+/* anillo exterior pulsante */
+.nav-cta::after{
+  content:'';
+  position:absolute;inset:-3px;
+  border-radius:50px;
+  background:transparent;
+  border:2px solid rgba(0,195,140,0.6);
+  animation:navring 1.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes navpulse{
+  0%,100%{
+    box-shadow:0 0 10px 2px rgba(0,179,126,0.45),0 4px 18px rgba(0,179,126,0.3);
+  }
+  50%{
+    box-shadow:0 0 26px 8px rgba(0,195,140,0.75),0 6px 30px rgba(0,195,140,0.55);
+  }
+}
+@keyframes navshine{
+  0%{left:-75%;}
+  60%,100%{left:130%;}
+}
+@keyframes navring{
+  0%,100%{opacity:0.6;transform:scale(1);}
+  50%{opacity:0;transform:scale(1.12);}
+}
+.nav-cta:hover{
+  background:linear-gradient(135deg,#00D99A,#3EDD81)!important;
+  box-shadow:0 0 36px 12px rgba(0,195,140,0.85)!important;
+  transform:scale(1.05);
+  animation:none;
+}
+@media(max-width:700px){
+  .nav-tagline{display:none;}
+  .nav-links .nav-link{display:none;}
+  .nav-links{display:flex;}
+}
 
 /* ── HERO — EDITORIAL SPLIT ── */
 .hero{
@@ -530,42 +584,100 @@ footer{
 /* ── STICKY ── */
 .sticky{
   position:fixed;bottom:0;left:0;right:0;z-index:99;
-  background:var(--paper);border-top:1px solid var(--rule);
-  display:grid;grid-template-columns:1fr auto auto;
-  align-items:center;gap:0;
+  background:var(--paper);
+  border-top:2px solid var(--ink);
+  display:flex;align-items:stretch;
   transform:translateY(100%);transition:transform .4s ease;
+  box-shadow:0 -2px 20px rgba(10,31,68,0.08);
 }
 .sticky.visible{transform:translateY(0);}
-.sticky-main{
-  padding:12px 24px;border-right:1px solid var(--rule);
+
+/* Desktop: columnas separadas por reglas */
+.sk-col{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 22px;flex:1;
+  border-right:1px solid var(--rule);
 }
-.sticky-name{font-size:12px;font-weight:700;color:var(--ink);}
-.sticky-name span{color:var(--green);}
-.sticky-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.5px;margin-top:1px;}
-.sticky-price{
-  padding:0 24px;border-right:1px solid var(--rule);
-  text-align:center;
-}
-.sticky-was{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-decoration:line-through;}
-.sticky-now{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);line-height:1.2;}
-.sticky-cta{padding:0 20px;}
-.sticky-cta a{
+.sk-col:last-child{border-right:none;}
+.sk-info{flex:1;min-width:0;}
+.sk-name{font-size:12px;font-weight:700;color:var(--ink);line-height:1.3;white-space:nowrap;}
+.sk-name span{color:var(--green);}
+.sk-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.3px;margin-top:1px;white-space:nowrap;}
+.sk-price{flex-shrink:0;text-align:right;}
+.sk-was{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-decoration:line-through;line-height:1;}
+.sk-now{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink);line-height:1.15;}
+.sk-now.green{color:var(--green);}
+.sk-btn{
+  flex-shrink:0;
   display:inline-flex;align-items:center;
   background:var(--ink);color:var(--paper);
-  font-weight:700;font-size:12px;padding:10px 20px;
+  font-weight:700;font-size:12px;padding:9px 16px;
   border-radius:3px;white-space:nowrap;font-family:'DM Sans',sans-serif;
-  transition:background .2s;
+  transition:background .2s;text-decoration:none;
 }
-.sticky-cta a:hover{background:var(--green);}
+.sk-btn:hover{background:var(--green);}
+.sk-btn.accent{background:var(--green);}
+.sk-btn.accent:hover{background:var(--g2);}
 
-/* Mobile sticky */
-@media(max-width:600px){
-  .sticky{grid-template-columns:1fr;padding:10px 16px;gap:8px;}
-  .sticky-main,.sticky-price{border:none;padding:0;}
-  .sticky-price{display:none;}
-  .sticky-cta{padding:0;}
-  .sticky-cta a{width:100%;justify-content:center;}
+/* Mobile: oculta las columnas desktop, muestra 2 botones grandes */
+@media(max-width:660px){
+  .sticky{border-top:2px solid var(--green);padding:10px 12px;gap:8px;align-items:stretch;}
+  .sk-col{display:none;}
+  .sk-mobile{
+    display:flex!important;flex:1;flex-direction:column;
+    align-items:center;justify-content:center;gap:2px;
+    padding:9px 10px;border-radius:3px;text-align:center;
+    text-decoration:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
+  }
+  .sk-mob-label{font-size:11px;font-weight:700;color:#fff;line-height:1.2;}
+  .sk-mob-price{font-family:'DM Serif Display',serif;font-size:20px;font-weight:900;color:rgba(255,255,255,0.9);line-height:1.1;}
+  .sk-mob-sub{font-size:9px;color:rgba(255,255,255,0.6);line-height:1.2;font-family:'DM Mono',monospace;}
 }
+@media(min-width:661px){.sk-mobile{display:none;}}
+
+/* Triple price comparison */
+.price-trio{margin-bottom:6px;}
+.price-trio-row{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.pt-real{
+  font-family:inherit;font-size:11px;font-weight:600;
+  background:rgba(255,0,0,0.08);border:1px solid rgba(255,80,80,0.2);
+  color:#CC4444;padding:3px 10px;border-radius:3px;text-decoration:line-through;
+}
+.pt-normal{
+  font-size:11px;font-weight:600;
+  background:rgba(255,150,0,0.07);border:1px solid rgba(255,150,0,0.2);
+  color:#B87000;padding:3px 10px;border-radius:3px;text-decoration:line-through;
+}
+.pt-arrow{font-size:10px;color:#aaa;}
+.pt-launch-wrap{display:flex;align-items:baseline;gap:6px;}
+.pt-launch{
+  font-size:54px;font-weight:900;line-height:1;
+  color:var(--green,#00B37E);
+}
+.pt-usd{font-size:12px;color:#8899AA;}
+.pt-savings{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;
+}
+.pt-save-pill{
+  font-size:10px;font-weight:700;letter-spacing:0.5px;
+  padding:3px 10px;border-radius:100px;
+}
+.pt-save-pill.vs-normal{
+  background:rgba(255,150,0,0.1);border:1px solid rgba(255,150,0,0.25);
+  color:#C88000;
+}
+.pt-save-pill.vs-real{
+  background:rgba(0,179,126,0.1);border:1px solid rgba(0,179,126,0.25);
+  color:var(--green,#00B37E);
+}
+/* Dark variants */
+.dark-card .pt-real,.featured .pt-real{color:#FF7777;background:rgba(255,80,80,0.1);}
+.dark-card .pt-normal,.featured .pt-normal{color:#FFB800;background:rgba(255,184,0,0.08);}
+.dark-card .pt-launch,.featured .pt-launch{color:var(--green,#00B37E);}
+
 </style>
 </head>
 <body>
@@ -580,7 +692,7 @@ footer{
     <a href="#productos" class="nav-link">Productos</a>
     <a href="#vol2" class="nav-link">Vol. 2</a>
     <a href="https://ia-sin-complicaciones-prompt-packs.vercel.app/" class="nav-link">25 Prompts</a>
-    <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout nav-cta" style="background:var(--ink)!important;padding:8px 18px!important;font-size:11px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;font-family:'DM Mono',monospace!important;letter-spacing:0.5px!important;">Guía — $9.99</a>
+    <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta" target="_blank" rel="noopener">🚀 Quiero la guía por $9.99</a>
   </div>
 </nav>
 
@@ -598,11 +710,7 @@ footer{
     </p>
     <div class="hero-price-row">
       <div>
-        <div class="hp-normal">Precio normal $19.99</div>
-        <div style="display:flex;align-items:flex-end;gap:8px;">
-          <span class="hp-now">$9.99</span>
-          <span class="hp-usd">USD</span>
-        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;"><span class="pt-real">Real $57</span><span class="pt-arrow">→</span><span class="pt-normal" style="color:#AA6600;">Normal $19.99</span></div><div style="display:flex;align-items:flex-end;gap:8px;"><span class="hp-now">$9.99</span><span class="hp-usd">USD</span></div><div class="pt-savings" style="margin-top:6px;"><span class="pt-save-pill vs-normal">50% OFF vs normal</span><span class="pt-save-pill vs-real">🔥 82% OFF vs real</span></div>
       </div>
       <div class="hp-badge">50% OFF</div>
     </div>
@@ -741,7 +849,7 @@ footer{
           <div class="pf">PDF descargable · Hotmart</div>
         </div>
         <div class="prod-price">
-          <div class="pp-was">Valor real: $57.00</div>
+          <div class="pp-was">Real: $57.00</div>
           <div class="pp-now">$12.99</div>
           <div class="pp-usd">USD</div>
           <div class="pp-save">AHORRAS $44</div>
@@ -771,13 +879,11 @@ footer{
       <div class="cs-text">
         <div class="cs-eyebrow">Pack Total · Mejor valor</div>
         <div class="cs-title">Guía + 25 Prompts juntos</div>
-        <div class="cs-desc">Todo en un movimiento. Ahorras $2.98 vs comprar por separado · 81% OFF vs valor real $104</div>
+        <div class="cs-desc">Todo en un movimiento. 55% OFF vs normal $44 $44 · 82% OFF vs $114 real vs valor real $114</div>
       </div>
       <div class="cs-right">
         <div class="cs-price-block">
-          <div class="cs-was">$22.98</div>
-          <div class="cs-now">$20</div>
-          <div class="cs-usd">USD</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;background:rgba(255,80,80,0.15);color:#CC4444;text-decoration:line-through;">Real $114</span><span style="font-size:10px;color:rgba(255,255,255,0.5);">→</span><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;background:rgba(255,150,0,0.12);color:#FFB800;text-decoration:line-through;">Normal $44</span></div><div class="cs-now">$20</div><div class="cs-usd">USD</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;"><span style="font-size:9px;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;padding:2px 8px;border-radius:2px;">55% OFF vs normal</span><span style="font-size:9px;font-weight:700;background:rgba(0,179,126,0.2);color:#00B37E;padding:2px 8px;border-radius:2px;">82% OFF vs real</span></div>
         </div>
         <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout cs-btn" style="background:#fff!important;color:var(--ink)!important;font-size:14px!important;padding:14px 28px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:800!important;">Pack Total $20 →</a>
       </div>
@@ -915,17 +1021,56 @@ footer{
 
 <!-- STICKY -->
 <div class="sticky" id="stickyBar">
-  <div class="sticky-main">
-    <div class="sticky-name">Guía Estratégica Vol. 1 — <span>$9.99 lanzamiento</span></div>
-    <div class="sticky-sub">9 capítulos · PDF · Acceso inmediato</div>
+
+  <!-- DESKTOP: 3 columnas ─────────────────────────── -->
+  <div class="sk-col">
+    <div class="sk-info">
+      <div class="sk-name">Guía Estratégica Vol. 1</div>
+      <div class="sk-sub">9 capítulos · PDF · 50% OFF</div>
+    </div>
+    <div class="sk-price">
+      <div class="sk-was">$19.99</div>
+      <div class="sk-now">$9.99</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout sk-btn" style="background:var(--ink)!important;padding:9px 16px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Comprar →</a>
   </div>
-  <div class="sticky-price">
-    <div class="sticky-was">$19.99</div>
-    <div class="sticky-now">$9.99</div>
+
+  <div class="sk-col">
+    <div class="sk-info">
+      <div class="sk-name">Pack <span>25 Prompts</span></div>
+      <div class="sk-sub">Normal $25 · 48% OFF · Ahorras $12</div>
+    </div>
+    <div class="sk-price">
+      <div class="sk-was">$25.00</div>
+      <div class="sk-now green">$12.99</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout sk-btn accent" style="background:var(--green)!important;padding:9px 16px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Prompts →</a>
   </div>
-  <div class="sticky-cta">
-    <a onclick="return false;" href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="hotmart-fb hotmart__button-checkout" style="background:var(--ink)!important;padding:10px 20px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Comprar →</a>
+
+  <div class="sk-col">
+    <div class="sk-info">
+      <div class="sk-name">Guía + <span>Pack · Combo</span></div>
+      <div class="sk-sub">Normal $44 · 55% OFF · Ahorras $24</div>
+    </div>
+    <div class="sk-price">
+      <div class="sk-was">$44.00</div>
+      <div class="sk-now green">$20.00</div>
+    </div>
+    <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sk-btn" style="background:var(--ink)!important;padding:9px 16px!important;font-size:12px!important;border-radius:3px!important;box-shadow:none!important;width:auto!important;font-weight:700!important;">Pack Total →</a>
   </div>
+
+  <!-- MÓVIL: 2 botones grandes ─────────────────────── -->
+  <a onclick="return false;" href="https://pay.hotmart.com/L104788404U?checkoutMode=2&off=kiopt2fa" class="hotmart-fb hotmart__button-checkout sk-mobile" style="background:var(--green)!important;text-decoration:none!important;">
+    <span class="sk-mob-label">Pack 25 Prompts</span>
+    <span class="sk-mob-price">$12.99</span>
+    <span class="sk-mob-sub">Normal $25 · 48% OFF</span>
+  </a>
+  <a onclick="return false;" href="https://pay.hotmart.com/A104789123J?checkoutMode=2&off=uzygs8w1" class="hotmart-fb hotmart__button-checkout sk-mobile" style="background:var(--ink)!important;text-decoration:none!important;">
+    <span class="sk-mob-label">Guía + Pack · Combo</span>
+    <span class="sk-mob-price">$20.00</span>
+    <span class="sk-mob-sub">Normal $44 · 55% OFF</span>
+  </a>
+
 </div>
 
 <script>
