@@ -32,8 +32,9 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   background:var(--paper);
   border-bottom:1px solid var(--rule);
-  padding:0 32px;height:56px;
+  padding:0 16px;height:56px;
   display:flex;align-items:center;justify-content:space-between;
+  box-sizing:border-box;width:100%;overflow:hidden;
 }
 .nav-brand{display:flex;align-items:center;gap:10px;}
 .nav-logo{font-family:'DM Serif Display',serif;font-size:15px;color:var(--ink);letter-spacing:-0.3px;}
@@ -104,22 +105,25 @@ nav{
 .nav-cta-desk{display:inline-flex!important;}
 
 @media(max-width:700px){
+  nav{padding:0 12px;}
   .nav-tagline{display:none;}
-  .nav-links{display:none!important;}        /* oculta todo el bloque de links en móvil */
-  .nav-brand{display:flex;align-items:center;gap:10px;flex:1;}
-  /* Muestra el CTA pegado al logo */
+  .nav-links{display:none!important;}
+  .nav-brand{gap:8px;}
+  /* Botón compacto: solo emoji + precio en una línea */
   .nav-cta-mob{
     display:inline-flex!important;
-    font-size:10px;padding:6px 12px;
-    margin-left:auto;               /* empuja el botón al extremo derecho del brand */
-    flex-direction:column;gap:0;
-    border-radius:40px;line-height:1.25;text-align:center;
+    align-items:center;gap:4px;
+    font-size:11px;font-weight:800;
+    padding:7px 11px;
+    border-radius:40px;
+    flex-direction:row;
+    white-space:nowrap;
+    flex-shrink:0;
   }
-  .nav-cta-line1{font-size:10px;font-weight:800;}
-  .nav-cta-line2{font-size:11px;font-weight:900;}
+  .nav-cta-line1{font-size:11px;}  /* muestra solo "🚀 $9.99" */
+  .nav-cta-line2{display:none;}    /* oculta la segunda línea */
 }
 
-/* Desktop: una sola línea */
 @media(min-width:701px){
   .nav-cta{flex-direction:row;white-space:nowrap;}
   .nav-cta-line1::after{content:' ';}
@@ -734,8 +738,7 @@ footer{
     <span class="nav-logo">IA Sin <span>Complicaciones</span></span>
     <span class="nav-tagline">Tiempo Inteligente</span>
     <a href="https://pay.hotmart.com/F104691921G?checkoutMode=2&off=kisl142w" class="nav-cta nav-cta-mob" target="_blank" rel="noopener">
-      <span class="nav-cta-line1">🚀 Quiero la guía</span>
-      <span class="nav-cta-line2">por $9.99</span>
+      <span class="nav-cta-line1">🚀 Guía $9.99</span>
     </a>
   </div>
   <div class="nav-links">
